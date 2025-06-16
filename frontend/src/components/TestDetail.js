@@ -111,13 +111,15 @@ const TestDetail = () => {
                                                         onChange={(e) =>
                                                             setAnswers({
                                                                 ...answers,
-                                                                [q._id]:
+                                                                [q._id]: Number(
                                                                     e.target
-                                                                        .value,
+                                                                        .value
+                                                                ),
                                                             })
                                                         }
                                                         className="w-5 h-5"
                                                     />
+
                                                     <span className="text-[#660000] text-lg">
                                                         {option.option}
                                                     </span>
