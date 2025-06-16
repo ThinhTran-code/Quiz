@@ -12,29 +12,21 @@ const QuizPage = () => {
     const storedUserId = localStorage.getItem("userId");
     const userId = user?.userId || storedUserId;
 
-    // Quiz list state (for /quiz)
     const [quizList, setQuizList] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const quizzesPerPage = 6;
 
-    // Quiz taking state (for /quiz/:id)
     const [quiz, setQuiz] = useState(null);
     const [answers, setAnswers] = useState([]);
     const [timeLeft, setTimeLeft] = useState(null);
 
-    // ============================
-    // LOAD QUIZ LIST (no ID)
-    // ============================
     useEffect(() => {
         if (!id) {
             getQuizzes().then(setQuizList).catch(console.error);
         }
     }, [id]);
 
-    // ============================
-    // LOAD QUIZ BY ID
-    // ============================
     useEffect(() => {
         if (id) {
             if (!userId) {
@@ -51,18 +43,43 @@ const QuizPage = () => {
                 })
                 .catch(console.error);
         }
-    }, [id, userId]);
+    }, [id, userId, navigate]);
 
-    // ============================
-    // COUNTDOWN TIMER
-    // ============================
     useEffect(() => {
         if (timeLeft === null || !id) return;
-        if (timeLeft <= 0) handleSubmit();
+
+        if (timeLeft <= 0) {
+            if (!quiz) return;
+
+            const formattedAnswers = quiz.questions.map((q, index) => ({
+                questionId: q._id,
+                selectedAnswer: Number(answers[index]),
+                isCorrect: Number(q.answer) === Number(answers[index]),
+            }));
+
+            const quizData = {
+                quizId: id,
+                userId,
+                answers: formattedAnswers,
+                totalQuestions: quiz.questions.length,
+            };
+
+            submitQuiz(quizData)
+                .then((result) => {
+                    if (result.quizAttempt) {
+                        navigate(
+                            `/result?score=${result.quizAttempt.score}&total=${result.quizAttempt.totalQuestions}`
+                        );
+                    }
+                })
+                .catch((err) => alert("Nộp bài thất bại: " + err.message));
+
+            return;
+        }
 
         const timer = setInterval(() => setTimeLeft((prev) => prev - 1), 1000);
         return () => clearInterval(timer);
-    }, [timeLeft]);
+    }, [timeLeft, id, quiz, answers, navigate, userId]);
 
     const formatTime = (seconds) => {
         const m = Math.floor(seconds / 60);
@@ -106,9 +123,6 @@ const QuizPage = () => {
         }
     };
 
-    // ============================
-    // RENDER: QUIZ LIST (/quiz)
-    // ============================
     if (!id) {
         const filtered = quizList.filter((q) =>
             q.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -183,9 +197,6 @@ const QuizPage = () => {
         );
     }
 
-    // ============================
-    // RENDER: QUIZ DOING (/quiz/:id)
-    // ============================
     if (!quiz) {
         return (
             <div className="text-center mt-20 text-xl font-medium text-gray-600">

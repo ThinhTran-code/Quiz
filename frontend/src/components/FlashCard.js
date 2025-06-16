@@ -22,7 +22,9 @@ const Flashcard = () => {
 
     useEffect(() => {
         if (autoFlip) {
-            const timer = setTimeout(() => handleFlip(), 2000);
+            const timer = setTimeout(() => {
+                setFlipped((prev) => !prev);
+            }, 2000);
             return () => clearTimeout(timer);
         }
     }, [currentIndex, flipped, autoFlip]);
@@ -46,7 +48,7 @@ const Flashcard = () => {
     };
 
     return (
-        <div>
+        <>
             <Navbar />
             <div
                 className="relative min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-fixed p-6"
@@ -77,9 +79,10 @@ const Flashcard = () => {
                         onClick={handleFlip}
                     >
                         <p className="text-xl font-semibold text-[#660000]">
-                            {flipped
+                            {flipped && cards.length > 0
                                 ? cards[currentIndex].answer
-                                : cards[currentIndex].question}
+                                : cards[currentIndex]?.question ||
+                                  "Chưa có dữ liệu"}
                         </p>
                     </div>
                 ) : (
@@ -121,7 +124,7 @@ const Flashcard = () => {
                 </button>
             </div>
             <Footer />
-        </div>
+        </>
     );
 };
 

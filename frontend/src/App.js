@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AuthProvider, AuthContext } from "./context/AuthContext";
+import { AuthProvider } from "./context/AuthContext";
 import Home from "./components/Home";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp";
-import { useContext } from "react";
-import Profile from "./components/Profile";
+// import { useContext } from "react";
+// import Profile from "./components/Profile";
 import QuizPage from "./pages/QuizPage";
 import ResultPage from "./pages/ResultPage";
 import HistoryPage from "./pages/HistoryPage";
@@ -16,10 +16,10 @@ import CategoryTests from "./components/CategoryTests";
 import TestDetail from "./components/TestDetail";
 import QuizGenerator from "./components/QuizGenerator";
 import QuizAIForm from "./components/QuizAIForm";
-const ProtectedRoute = ({ element }) => {
-    const { user } = useContext(AuthContext);
-    return user ? element : <Login />;
-};
+// const ProtectedRoute = ({ element }) => {
+//     const { user } = useContext(AuthContext);
+//     return user ? element : <Login />;
+// };
 
 function App() {
     return (
@@ -29,10 +29,10 @@ function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/signup" element={<SignUp />} />
-                    <Route
+                    {/* <Route
                         path="/profile"
                         element={<ProtectedRoute element={<Profile />} />}
-                    />{" "}
+                    />{" "} */}
                     <Route path="/quiz/:id" element={<QuizPage />} />
                     <Route path="/result" element={<ResultPage />} />
                     <Route path="/history/:userId" element={<HistoryPage />} />

@@ -6,14 +6,14 @@ import Footer from "./Footer";
 import backgroundImage from "../assets/8.jpg";
 // import jsImg from "../assets/javascript.png";
 // 🖼 Danh sách ảnh tương ứng với từng category
-const categoryImages = {
-    HTML: "/assets/html.jpg",
-    CSS: "/assets/css.jpg",
-    // JavaScript: jsImg,
-    React: "/assets/react.jpg",
-    TailwindCSS: "/assets/python.jpg",
-    MongoDB: "/assets/java.jpg",
-};
+// const categoryImages = {
+//     HTML: "/assets/html.jpg",
+//     CSS: "/assets/css.jpg",
+//     // JavaScript: jsImg,
+//     React: "/assets/react.jpg",
+//     TailwindCSS: "/assets/python.jpg",
+//     MongoDB: "/assets/java.jpg",
+// };
 
 const TestCategories = () => {
     const [categories, setCategories] = useState([]);

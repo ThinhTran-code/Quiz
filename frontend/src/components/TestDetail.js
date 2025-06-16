@@ -106,7 +106,7 @@ const TestDetail = () => {
                                                         name={q._id}
                                                         value={i}
                                                         checked={
-                                                            answers[q._id] == i
+                                                            answers[q._id] === i
                                                         }
                                                         onChange={(e) =>
                                                             setAnswers({

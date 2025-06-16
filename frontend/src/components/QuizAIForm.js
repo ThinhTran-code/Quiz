@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { FaBolt, FaFilePdf } from "react-icons/fa";
+import { FaFilePdf } from "react-icons/fa";
 import newBackground from "../assets/formquiz.jpg";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
