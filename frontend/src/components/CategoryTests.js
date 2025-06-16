@@ -15,7 +15,7 @@ const CategoryTests = () => {
             .get(`http://localhost:9999/api/quizzes/category/${categoryName}`)
             .then((res) => {
                 setQuizzes(res.data);
-                console.log("Quizzes nhận được:", res.data); // 👈 Dòng cần thêm
+                console.log("Quizzes nhận được:", res.data);
             })
 
             .catch((error) => console.error("Lỗi tải quiz:", error));
@@ -76,10 +76,9 @@ const CategoryTests = () => {
                                                 {quiz.instructions}
                                             </td>
 
-                                            <td className="px-4 py-3 text-white">
+                                            <td className="px-4 py-3 text-black">
                                                 <span className="bg-gray-500 text-white text-xs font-semibold px-2 py-1 rounded">
-                                                    {quiz.questions?.length ||
-                                                        0}{" "}
+                                                    {quiz.questionsCount || 0}{" "}
                                                     câu hỏi
                                                 </span>
                                             </td>
@@ -107,7 +106,7 @@ const CategoryTests = () => {
                                                 >
                                                     🚀 Vào thi
                                                 </button>
-                                                <button
+                                                {/* <button
                                                     onClick={() =>
                                                         navigate(
                                                             `/result/${quiz._id}`
@@ -116,7 +115,7 @@ const CategoryTests = () => {
                                                     className="border border-red-500 text-red-500 px-4 py-2 rounded hover:bg-red-100 text-sm font-semibold"
                                                 >
                                                     📊 Xem kết quả
-                                                </button>
+                                                </button> */}
                                             </td>
                                         </tr>
                                     ))}

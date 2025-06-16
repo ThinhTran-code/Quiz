@@ -8,21 +8,37 @@ const router = express.Router();
 // 📌 Lấy tất cả quiz theo category
 router.get("/category/:categoryName", async (req, res) => {
     try {
-        const quizzes = await Quiz.find({
-            category: req.params.categoryName,
-            isEnabled: true,
-        }).select("name instructions duration");
+        const categoryName = req.params.categoryName;
+
+        const quizzes = await Quiz.aggregate([
+            {
+                $match: {
+                    category: categoryName,
+                    isEnabled: true,
+                },
+            },
+            {
+                $project: {
+                    name: 1,
+                    instructions: 1,
+                    createdAt: 1,
+                    questionsCount: { $size: "$questions" },
+                },
+            },
+        ]);
+
         if (quizzes.length === 0) {
             return res
                 .status(404)
                 .json({ message: "Không tìm thấy quiz thuộc category này" });
         }
+
         res.json(quizzes);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        console.error("Lỗi khi lấy quiz theo category:", err);
+        res.status(500).json({ message: "Lỗi server" });
     }
 });
-
 // 📌 Tạo quiz mới – admin cần nhập category
 router.post("/create", auth, authorizeAdmin, async (req, res) => {
     try {

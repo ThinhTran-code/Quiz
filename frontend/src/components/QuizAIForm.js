@@ -10,6 +10,8 @@ const QuizAIForm = () => {
     const [loading, setLoading] = useState(false);
     const [questions, setQuestions] = useState([]);
     const [error, setError] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const questionsPerPage = 5;
 
     const handleUploadClick = () => {
         fileInputRef.current.click();
@@ -22,6 +24,7 @@ const QuizAIForm = () => {
         setLoading(true);
         setError("");
         setQuestions([]);
+        setCurrentPage(1);
 
         const formData = new FormData();
         formData.append("file", file);
@@ -40,8 +43,6 @@ const QuizAIForm = () => {
                 }
             );
 
-            console.log("✅ Server response:", res.data);
-
             const rawQuestions = res.data.questions;
 
             if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) {
@@ -50,12 +51,11 @@ const QuizAIForm = () => {
                 return;
             }
 
-            // ✅ Gồm cả đáp án (options)
             const parsedQuestions = rawQuestions.map((q, idx) => ({
                 id: idx + 1,
                 text: q.question || "Không có nội dung câu hỏi",
                 options: q.answers?.map((a) => a.option) || [],
-                correctIndex: q.answer ?? null, // 👈 quan trọng: lấy index đáp án đúng
+                correctIndex: q.answer ?? null,
             }));
 
             setQuestions(parsedQuestions);
@@ -66,6 +66,15 @@ const QuizAIForm = () => {
             setLoading(false);
         }
     };
+
+    // Tính toán phân trang
+    const indexOfLastQuestion = currentPage * questionsPerPage;
+    const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
+    const currentQuestions = questions.slice(
+        indexOfFirstQuestion,
+        indexOfLastQuestion
+    );
+    const totalPages = Math.ceil(questions.length / questionsPerPage);
 
     return (
         <div>
@@ -115,7 +124,7 @@ const QuizAIForm = () => {
                             Câu hỏi được tạo
                         </h2>
                         <div className="space-y-6">
-                            {questions.map((q) => (
+                            {currentQuestions.map((q) => (
                                 <div
                                     key={q.id}
                                     className="bg-gray-100 p-6 rounded-lg shadow-md border border-gray-300"
@@ -128,11 +137,11 @@ const QuizAIForm = () => {
                                             <div
                                                 key={i}
                                                 className={`p-3 rounded-lg text-lg font-medium 
-                                    ${
-                                        i === q.correctIndex
-                                            ? "bg-green-500 text-green font-bold"
-                                            : "bg-white text-gray-800 border border-gray-300"
-                                    }`}
+                                        ${
+                                            i === q.correctIndex
+                                                ? "bg-green-500 text-green font-bold"
+                                                : "bg-white text-gray-800 border border-gray-300"
+                                        }`}
                                             >
                                                 {String.fromCharCode(65 + i)}.{" "}
                                                 {opt}
@@ -141,6 +150,35 @@ const QuizAIForm = () => {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* PHÂN TRANG */}
+                        <div className="flex justify-center gap-4 mt-6">
+                            <button
+                                onClick={() =>
+                                    setCurrentPage((prev) =>
+                                        Math.max(prev - 1, 1)
+                                    )
+                                }
+                                disabled={currentPage === 1}
+                                className="px-4 py-2 bg-red-300 text-[#660000] rounded hover:bg-red-200 disabled:opacity-50"
+                            >
+                                Trang trước
+                            </button>
+                            <span className="text-lg font-semibold text-[#660000]">
+                                Trang {currentPage}/{totalPages}
+                            </span>
+                            <button
+                                onClick={() =>
+                                    setCurrentPage((prev) =>
+                                        Math.min(prev + 1, totalPages)
+                                    )
+                                }
+                                disabled={currentPage === totalPages}
+                                className="px-4 py-2 bg-red-300 text-[#660000] rounded hover:bg-red-200 disabled:opacity-50"
+                            >
+                                Trang sau
+                            </button>
                         </div>
                     </div>
                 )}

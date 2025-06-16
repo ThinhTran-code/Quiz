@@ -3,13 +3,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-import backgroundImage from "../assets/8.jpg"; // 📂 Ảnh nền chính
-
+import backgroundImage from "../assets/8.jpg";
+// import jsImg from "../assets/javascript.png";
 // 🖼 Danh sách ảnh tương ứng với từng category
 const categoryImages = {
     HTML: "/assets/html.jpg",
     CSS: "/assets/css.jpg",
-    JavaScript: "/assets/javascript.jpg",
+    // JavaScript: jsImg,
     React: "/assets/react.jpg",
     TailwindCSS: "/assets/python.jpg",
     MongoDB: "/assets/java.jpg",
@@ -36,7 +36,7 @@ const TestCategories = () => {
                 }, {});
                 setQuizCount(countMap);
 
-                setQuizzes(res.data); // 📌 Lưu danh sách toàn bộ quiz
+                setQuizzes(res.data);
             })
             .catch((error) => console.error("Lỗi tải danh mục:", error));
     }, []);
@@ -47,11 +47,12 @@ const TestCategories = () => {
             className="group bg-white/90 p-6 rounded-xl shadow-xl w-[20rem] h-[15rem] flex flex-col justify-between hover:scale-105 transition transform duration-300 cursor-pointer"
             onClick={() => navigate(`/tests/${category}`)}
         >
-            <img
+            {/* <img
                 src={categoryImages[category] || "/assets/default.jpg"}
                 alt={category}
-                className="w-full h-28 object-cover rounded-lg"
-            />
+                className="w-full max-h-[6rem] object-contain rounded-md"
+            /> */}
+
             <h2 className="text-2xl font-bold text-[#660000] mt-3 text-center">
                 {category}
             </h2>
@@ -68,7 +69,7 @@ const TestCategories = () => {
     const handleRandomQuiz = () => {
         if (quizzes.length === 0) return;
         const randomQuiz = quizzes[Math.floor(Math.random() * quizzes.length)];
-        navigate(`/test/${randomQuiz._id}`); // 📌 Điều hướng đến quiz ngẫu nhiên
+        navigate(`/test/${randomQuiz._id}`);
     };
 
     return (
@@ -84,7 +85,6 @@ const TestCategories = () => {
                     Chọn danh mục để làm bài kiểm tra
                 </h1>
 
-                {/* 📂 Chia 2 hàng với category lớn hơn */}
                 <div className="relative z-10 space-y-10">
                     <div className="flex flex-wrap justify-center gap-12">
                         {categories.slice(0, 3).map((cat) => (

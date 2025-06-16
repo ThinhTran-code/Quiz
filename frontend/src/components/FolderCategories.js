@@ -10,6 +10,7 @@ import CSSImage from "../assets/css1.png";
 import ReactImage from "../assets/react.png";
 import TailwindCSSImage from "../assets/tailwindcss.png";
 import MongoDBImage from "../assets/MongoDB-Logo.jpg";
+import QuizAI from "../assets/aiquiz.png";
 // 🖼 Danh sách ảnh tương ứng với từng category
 const categoryImages = {
     HTML: HTMLImage,
@@ -18,6 +19,7 @@ const categoryImages = {
     React: ReactImage,
     TailwindCSS: TailwindCSSImage,
     MongoDB: MongoDBImage,
+    "Các Câu Hỏi Do AI Tạo Ra": QuizAI,
 };
 
 const FolderCategories = () => {

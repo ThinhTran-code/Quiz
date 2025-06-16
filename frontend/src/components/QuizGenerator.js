@@ -1,10 +1,10 @@
 import React from "react";
-import { useNavigate } from "react-router-dom"; // 👈 Thêm dòng này
+import { useNavigate } from "react-router-dom";
 import formBackground from "../assets/123.jpg";
 import logo from "../assets/sniping.png";
 
 const QuizGenerator = () => {
-    const navigate = useNavigate(); // 👈 Hook để điều hướng
+    const navigate = useNavigate();
 
     const handleNavigate = () => {
         navigate("/generatequiz");
@@ -27,7 +27,7 @@ const QuizGenerator = () => {
                     Generate a quiz from <br /> any subject or PDF
                 </p>
                 <button
-                    onClick={handleNavigate} // 👈 Gọi hàm điều hướng
+                    onClick={handleNavigate}
                     className="bg-[#FFD700] text-[#660000] font-bold px-5 py-2 rounded-full shadow-md hover:bg-[#D97300] transition"
                 >
                     Quiz generator

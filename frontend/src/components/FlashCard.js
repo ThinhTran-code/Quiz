@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
-import backgroundImage from "../assets/7.jpg"; // 📂 Đảm bảo đường dẫn đúng
+import backgroundImage from "../assets/7.jpg";
 
 const Flashcard = () => {
     const { quizId } = useParams();
@@ -22,7 +22,7 @@ const Flashcard = () => {
 
     useEffect(() => {
         if (autoFlip) {
-            const timer = setTimeout(() => handleFlip(), 3000); // ⏱ Tự động lật sau 3 giây
+            const timer = setTimeout(() => handleFlip(), 2000);
             return () => clearTimeout(timer);
         }
     }, [currentIndex, flipped, autoFlip]);

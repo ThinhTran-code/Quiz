@@ -36,7 +36,7 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
         //  Prompt
         const prompt = `
-Dựa trên nội dung tài liệu sau, hãy tạo 5 câu hỏi trắc nghiệm.  
+Dựa trên nội dung tài liệu sau, hãy tạo 10 câu hỏi trắc nghiệm.  
 Mỗi câu gồm 4 lựa chọn và 1 đáp án đúng.  
 Trình bày như sau:
 
@@ -60,7 +60,7 @@ ${textContent}
                 model: "gpt-4o",
                 messages: [{ role: "user", content: prompt }],
                 temperature: 0.7,
-                max_tokens: 1500,
+                max_tokens: 2000,
             },
             {
                 headers: {
