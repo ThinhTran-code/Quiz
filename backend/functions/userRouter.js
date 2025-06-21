@@ -7,7 +7,7 @@ const connectDB = require('../shared/mongoose');
 app.http('registerUser', {
     methods: ['POST'],
     authLevel: 'anonymous',
-    route: '/register',
+    route: 'register',
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -39,7 +39,7 @@ app.http('registerUser', {
 app.http('loginUser', {
     methods: ['POST'],
     authLevel: 'anonymous',
-    route: '/login',
+    route: 'login',
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -82,7 +82,7 @@ app.http('loginUser', {
 app.http('getUserProfile', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: '/profile',
+    route: 'profile',
     handler: async (req, context) => {
         try {
             await connectDB();
