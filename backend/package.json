@@ -1,7 +1,7 @@
 {
     "name": "projectexe201",
     "version": "1.0.0",
-    "main": "index.js",
+    "main": "functions/*.js",
     "scripts": {
         "test": "echo \"No tests yet...\"",
         "dev": "func start",

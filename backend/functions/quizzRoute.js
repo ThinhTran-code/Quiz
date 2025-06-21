@@ -86,7 +86,7 @@ app.http('createQuiz', {
 app.http('getAllQuizzes', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: '/',
+    route: 'quizzes',
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -103,7 +103,7 @@ app.http('getAllQuizzes', {
 app.http('getQuizById', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: '/{id}',
+    route: '{id}',
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -121,7 +121,7 @@ app.http('getQuizById', {
 app.http('submitQuizWithDetails', {
     methods: ['POST'],
     authLevel: 'anonymous',
-    route: '/submit',
+    route: 'submit',
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -194,7 +194,7 @@ app.http('submitQuizWithDetails', {
 app.http('getFlashcards', {
     methods: ['GET'],
     authLevel: 'anonymous',
-    route: '/{quizId}/flashcards',
+    route: '{quizId}/flashcards',
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -215,30 +215,3 @@ app.http('getFlashcards', {
     },
 });
 
-app.http('getQuizzesByCategoryLean', {
-    methods: ['GET'],
-    authLevel: 'anonymous',
-    route: '/category/{categoryName}',
-    handler: async (req, context) => {
-        try {
-            await connectDB();
-            const categoryName = req.params.categoryName;
-
-            const quizzes = await Quiz.find({
-                category: categoryName,
-                isEnabled: true,
-            }).lean();
-
-            if (quizzes.length === 0) {
-                return {
-                    status: 404,
-                    jsonBody: { message: 'Không tìm thấy quiz thuộc category này' },
-                };
-            }
-
-            return { status: 200, jsonBody: quizzes };
-        } catch (err) {
-            return { status: 500, jsonBody: { message: err.message } };
-        }
-    },
-});
