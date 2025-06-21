@@ -67,7 +67,6 @@ const QuizAIForm = () => {
         }
     };
 
-    // Tính toán phân trang
     const indexOfLastQuestion = currentPage * questionsPerPage;
     const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
     const currentQuestions = questions.slice(
@@ -152,7 +151,6 @@ const QuizAIForm = () => {
                             ))}
                         </div>
 
-                        {/* PHÂN TRANG */}
                         <div className="flex justify-center gap-4 mt-6">
                             <button
                                 onClick={() =>

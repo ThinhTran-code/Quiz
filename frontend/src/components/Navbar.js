@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/logoQuizPro_navbar_48px.png"; // 📂 Đảm bảo đường dẫn đúng
+import logo from "../assets/logoQuizPro_navbar_48px.png";
 
 const Navbar = () => {
     const { user, setUser } = useContext(AuthContext);
@@ -17,29 +17,25 @@ const Navbar = () => {
 
     return (
         <nav className="bg-[#EAF3FA] text-[#660000] p-4 flex justify-between items-center shadow-md">
-            {/* Logo */}
-            <Link to="/" className="flex items-center">
-                <img
-                    src={logo}
-                    alt="QuizPro Logo"
-                    className="w-12 h-12 object-contain"
-                />
-            </Link>
-
-            {/* Navbar links */}
             <div className="flex items-center space-x-6">
-                <Link
-                    to="/"
-                    className="font-semibold hover:underline flex-1 text-left"
-                >
+                <Link to="/" className="flex items-center">
+                    <img
+                        src={logo}
+                        alt="QuizPro Logo"
+                        className="w-12 h-12 object-contain"
+                    />
+                </Link>
+                <Link to="/" className="font-semibold hover:underline">
                     Home
                 </Link>
                 <Link to="/quizzes" className="hover:underline">
                     Quizzes
                 </Link>
+            </div>
 
+            <div className="flex items-center space-x-4">
                 {user ? (
-                    <div className="flex items-center space-x-4">
+                    <>
                         <Link to="/profile">
                             <span className="text-sm italic text-[#2C3E50]">
                                 Xin chào, {user.username}
@@ -51,7 +47,7 @@ const Navbar = () => {
                         >
                             Logout
                         </button>
-                    </div>
+                    </>
                 ) : (
                     <Link
                         to="/login"

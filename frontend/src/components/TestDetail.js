@@ -27,7 +27,6 @@ const TestDetail = () => {
             });
     }, [quizId]);
 
-    // ✅ Định nghĩa handleSubmit bằng useCallback
     const handleSubmit = useCallback(
         async (auto = false) => {
             if (!quiz) return;
@@ -72,7 +71,6 @@ const TestDetail = () => {
         [answers, quiz, quizId, userId, navigate]
     );
 
-    // ⏳ Countdown timer
     useEffect(() => {
         if (loading || !quiz) return;
 
@@ -80,7 +78,7 @@ const TestDetail = () => {
             setTimeLeft((prev) => {
                 if (prev <= 1) {
                     clearInterval(timer);
-                    handleSubmit(true); // ✅ Gọi tự động nộp bài khi hết giờ
+                    handleSubmit(true);
                     return 0;
                 }
                 return prev - 1;
@@ -100,22 +98,22 @@ const TestDetail = () => {
         <div>
             <Navbar />
             <div
-                className="relative min-h-screen flex flex-col items-center justify-center bg-cover bg-center bg-fixed p-6"
+                className="relative min-h-screen flex items-center justify-center bg-cover bg-center bg-fixed px-4 py-12"
                 style={{ backgroundImage: `url(${backgroundImage})` }}
             >
                 <div className="absolute inset-0 bg-black bg-opacity-50"></div>
 
                 {loading ? (
-                    <h1 className="relative z-10 text-2xl font-bold text-white">
+                    <h1 className="relative z-10 text-xl font-semibold text-white">
                         Đang tải quiz...
                     </h1>
                 ) : (
-                    <div className="relative z-10 max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg">
-                        <h1 className="text-3xl font-bold mb-4 text-[#660000] text-center">
+                    <div className="relative z-10 w-full max-w-md bg-white p-6 rounded-xl shadow-md mx-auto">
+                        <h1 className="text-2xl font-bold mb-4 text-gray-800 text-center">
                             {quiz?.name}
                         </h1>
 
-                        <div className="text-center text-red-600 font-bold text-xl mb-6">
+                        <div className="text-center text-blue-600 font-medium text-base mb-6">
                             ⏳ Thời gian còn lại: {formatTime(timeLeft)}
                         </div>
 
@@ -124,16 +122,20 @@ const TestDetail = () => {
                                 {quiz.questions.map((q, index) => (
                                     <div
                                         key={q._id}
-                                        className="bg-gray-100 p-5 rounded-lg shadow-md mb-6"
+                                        className="bg-gray-50 p-5 rounded-lg border border-gray-200 mb-6"
                                     >
-                                        <h2 className="text-lg font-semibold text-[#660000] mb-4">
+                                        <h2 className="text-sm font-medium text-gray-700 mb-3">
                                             {index + 1}. {q.question}
                                         </h2>
-                                        <div className="grid grid-cols-1 gap-3">
+                                        <div className="space-y-3">
                                             {q.answers.map((option, i) => (
                                                 <label
                                                     key={i}
-                                                    className="flex items-center space-x-3 p-3 bg-white rounded-lg cursor-pointer hover:bg-gray-200"
+                                                    className={`flex items-center px-4 py-3 border rounded-lg cursor-pointer transition ${
+                                                        answers[q._id] === i
+                                                            ? "bg-blue-50 border-blue-500"
+                                                            : "bg-white hover:bg-gray-100"
+                                                    }`}
                                                 >
                                                     <input
                                                         type="radio"
@@ -151,9 +153,9 @@ const TestDetail = () => {
                                                                 ),
                                                             })
                                                         }
-                                                        className="w-5 h-5"
+                                                        className="form-radio text-blue-600 w-5 h-5 mr-3"
                                                     />
-                                                    <span className="text-[#660000] text-lg">
+                                                    <span className="text-sm text-gray-700">
                                                         {option.option}
                                                     </span>
                                                 </label>
@@ -162,17 +164,17 @@ const TestDetail = () => {
                                     </div>
                                 ))}
 
-                                <div className="flex justify-center">
+                                <div className="flex justify-end">
                                     <button
                                         onClick={() => handleSubmit(false)}
-                                        className="mt-6 bg-[#660000] text-white px-6 py-3 rounded-lg text-lg font-semibold hover:bg-[#500000] shadow-lg"
+                                        className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
                                     >
-                                        ✅ Nộp bài
+                                        Nộp Bài
                                     </button>
                                 </div>
                             </>
                         ) : (
-                            <p className="text-lg text-[#660000] text-center">
+                            <p className="text-base text-gray-600 text-center">
                                 Không có câu hỏi nào trong quiz này.
                             </p>
                         )}
