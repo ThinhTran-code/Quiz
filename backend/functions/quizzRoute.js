@@ -1,14 +1,14 @@
-const { app } = require('@azure/functions');
-const Quiz = require('../shared/model/Quiz');
-const QuizAttempt = require('../shared/model/QuizAttempt');
-const connectDB = require('../shared/mongoose');
-const verifyToken = require('../shared/middleware/authmiddleware');
-const verifyAdmin = require('../shared/middleware/authmiddleware');
+const { app } = require("@azure/functions");
+const Quiz = require("../shared/model/Quiz");
+const QuizAttempt = require("../shared/model/QuizAttempt");
+const connectDB = require("../shared/mongoose");
+const verifyToken = require("../shared/middleware/authmiddleware");
+const verifyAdmin = require("../shared/middleware/authmiddleware");
 
-app.http('getQuizzesByCategory', {
-    methods: ['GET'],
-    authLevel: 'anonymous',
-    route: 'category/{categoryName}',
+app.http("getQuizzesByCategory", {
+    methods: ["GET"],
+    authLevel: "anonymous",
+    route: "category/{categoryName}",
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -25,7 +25,7 @@ app.http('getQuizzesByCategory', {
                         name: 1,
                         instructions: 1,
                         createdAt: 1,
-                        questionsCount: { $size: '$questions' },
+                        questionsCount: { $size: "$questions" },
                     },
                 },
             ]);
@@ -33,37 +33,45 @@ app.http('getQuizzesByCategory', {
             if (quizzes.length === 0) {
                 return {
                     status: 404,
-                    jsonBody: { message: 'Không tìm thấy quiz thuộc category này' },
+                    jsonBody: {
+                        message: "Không tìm thấy quiz thuộc category này",
+                    },
                 };
             }
 
             return { status: 200, jsonBody: quizzes };
         } catch (err) {
-            return { status: 500, jsonBody: { message: 'Lỗi server' } };
+            return { status: 500, jsonBody: { message: "Lỗi server" } };
         }
     },
 });
 
-app.http('createQuiz', {
-    methods: ['POST'],
-    authLevel: 'anonymous',
-    route: 'create',
+app.http("createQuiz", {
+    methods: ["POST"],
+    authLevel: "anonymous",
+    route: "create",
     handler: async (req, context) => {
         try {
             await connectDB();
 
-            const authHeader = req.headers.get('authorization');
-            const token = authHeader?.split(' ')[1];
+            const authHeader = req.headers.get("authorization");
+            const token = authHeader?.split(" ")[1];
             const user = verifyToken(token);
             if (!user || !verifyAdmin(user)) {
-                return { status: 403, jsonBody: { message: 'Không có quyền truy cập' } };
+                return {
+                    status: 403,
+                    jsonBody: { message: "Không có quyền truy cập" },
+                };
             }
 
             const body = await req.json();
             const { name, instructions, questions, duration, category } = body;
 
             if (!category) {
-                return { status: 400, jsonBody: { message: 'Quiz cần có category' } };
+                return {
+                    status: 400,
+                    jsonBody: { message: "Quiz cần có category" },
+                };
             }
 
             const quiz = await Quiz.create({
@@ -73,7 +81,7 @@ app.http('createQuiz', {
                 duration,
                 category,
                 owner: user.userId,
-                source: 'ai',
+                source: "ai",
             });
 
             return { status: 201, jsonBody: quiz };
@@ -83,15 +91,15 @@ app.http('createQuiz', {
     },
 });
 
-app.http('getAllQuizzes', {
-    methods: ['GET'],
-    authLevel: 'anonymous',
-    route: 'quizzes',
+app.http("getAllQuizzes", {
+    methods: ["GET"],
+    authLevel: "anonymous",
+    route: "quizzes",
     handler: async (req, context) => {
         try {
             await connectDB();
             const quizzes = await Quiz.find({ isEnabled: true }).select(
-                'name instructions duration category'
+                "name instructions duration category"
             );
             return { status: 200, jsonBody: quizzes };
         } catch (err) {
@@ -100,16 +108,21 @@ app.http('getAllQuizzes', {
     },
 });
 
-app.http('getQuizById', {
-    methods: ['GET'],
-    authLevel: 'anonymous',
-    route: '{id}',
+app.http("getQuizById", {
+    methods: ["GET"],
+    authLevel: "anonymous",
+    route: "quiz/{id}",
     handler: async (req, context) => {
         try {
             await connectDB();
             const quiz = await Quiz.findById(req.params.id);
             if (!quiz || !quiz.isEnabled) {
-                return { status: 404, jsonBody: { message: 'Quiz không tồn tại hoặc bị vô hiệu hóa' } };
+                return {
+                    status: 404,
+                    jsonBody: {
+                        message: "Quiz không tồn tại hoặc bị vô hiệu hóa",
+                    },
+                };
             }
             return { status: 200, jsonBody: quiz };
         } catch (err) {
@@ -118,10 +131,10 @@ app.http('getQuizById', {
     },
 });
 
-app.http('submitQuizWithDetails', {
-    methods: ['POST'],
-    authLevel: 'anonymous',
-    route: 'submit',
+app.http("submitQuizWithDetails", {
+    methods: ["POST"],
+    authLevel: "anonymous",
+    route: "submit",
     handler: async (req, context) => {
         try {
             await connectDB();
@@ -129,12 +142,18 @@ app.http('submitQuizWithDetails', {
             const { quizId, userId, answers } = body;
 
             if (!quizId || !userId || !answers || !Array.isArray(answers)) {
-                return { status: 400, jsonBody: { message: 'Thiếu thông tin cần thiết' } };
+                return {
+                    status: 400,
+                    jsonBody: { message: "Thiếu thông tin cần thiết" },
+                };
             }
 
             const quiz = await Quiz.findById(quizId);
             if (!quiz) {
-                return { status: 404, jsonBody: { message: 'Quiz không tồn tại' } };
+                return {
+                    status: 404,
+                    jsonBody: { message: "Quiz không tồn tại" },
+                };
             }
 
             if (answers.length !== quiz.questions.length) {
@@ -181,37 +200,51 @@ app.http('submitQuizWithDetails', {
 
             await quizAttempt.save();
 
-            return { status: 200, jsonBody: { message: 'Nộp bài thành công!', quizAttempt } };
+            return {
+                status: 200,
+                jsonBody: { message: "Nộp bài thành công!", quizAttempt },
+            };
         } catch (err) {
             return {
                 status: 500,
-                jsonBody: { message: 'Lỗi xử lý kết quả quiz', error: err.message },
+                jsonBody: {
+                    message: "Lỗi xử lý kết quả quiz",
+                    error: err.message,
+                },
             };
         }
     },
 });
 
-app.http('getFlashcards', {
-    methods: ['GET'],
-    authLevel: 'anonymous',
-    route: '{quizId}/flashcards',
+app.http("getFlashcards", {
+    methods: ["GET"],
+    authLevel: "anonymous",
+    route: "{quizId}/flashcards",
     handler: async (req, context) => {
         try {
             await connectDB();
             const quiz = await Quiz.findById(req.params.quizId);
             if (!quiz) {
-                return { status: 404, jsonBody: { error: 'Quiz không tồn tại' } };
+                return {
+                    status: 404,
+                    jsonBody: { error: "Quiz không tồn tại" },
+                };
             }
 
             const flashcards = quiz.questions.map((q) => ({
                 question: q.question,
-                answer: q.explanation || q.answers[q.answer]?.option || 'Không có đáp án',
+                answer:
+                    q.explanation ||
+                    q.answers[q.answer]?.option ||
+                    "Không có đáp án",
             }));
 
             return { status: 200, jsonBody: flashcards };
         } catch (err) {
-            return { status: 500, jsonBody: { error: 'Lỗi khi lấy flashcards' } };
+            return {
+                status: 500,
+                jsonBody: { error: "Lỗi khi lấy flashcards" },
+            };
         }
     },
 });
-

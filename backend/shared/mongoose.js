@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 let cachedDb = null;
 
 /**
@@ -8,7 +8,7 @@ let cachedDb = null;
  */
 const connectDB = async () => {
     if (cachedDb && mongoose.connection.readyState === 1) {
-        console.log('=> Using existing MongoDB connection');
+        console.log("=> Using existing MongoDB connection");
         return cachedDb;
     }
 
@@ -16,8 +16,10 @@ const connectDB = async () => {
     const MONGO_NAME = process.env.MONGO_NAME;
 
     if (!MONGO_URI || !MONGO_NAME) {
-        console.error('Error: MONGO_URI or MONGO_NAME is not defined in environment variables.');
-        throw new Error('MongoDB URI or Database Name is not defined.');
+        console.error(
+            "Error: MONGO_URI or MONGO_NAME is not defined in environment variables."
+        );
+        throw new Error("MongoDB URI or Database Name is not defined.");
     }
 
     try {
@@ -30,10 +32,12 @@ const connectDB = async () => {
         });
 
         cachedDb = client.connection;
-        console.log(`=> Established new MongoDB connection to database: "${MONGO_NAME}"`);
+        console.log(
+            `=> Established new MongoDB connection to database: "${MONGO_NAME}"`
+        );
         return cachedDb;
     } catch (error) {
-        console.error('❌ MongoDB connection error:', error.message);
+        console.error("❌ MongoDB connection error:", error.message);
         cachedDb = null;
         throw error;
     }
