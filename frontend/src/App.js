@@ -49,7 +49,7 @@ function App() {
                         path="/flashcards/:categoryName"
                         element={<CategoryFlashcards />}
                     />{" "}
-                    <Route path="/flashcard/:quizId" element={<Flashcard />} />
+                    <Route path="/flashcard/:id" element={<Flashcard />} />
                     <Route path="/tests" element={<TestCategories />} />
                     <Route
                         path="/tests/:categoryName"

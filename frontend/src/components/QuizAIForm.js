@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { FaFilePdf } from "react-icons/fa";
 import newBackground from "../assets/formquiz.jpg";
 import Footer from "./Footer";
@@ -34,7 +34,7 @@ const QuizAIForm = () => {
 
         try {
             const res = await axios.post(
-                "generate/upload",
+                "upload",
                 formData,
                 {
                     headers: {

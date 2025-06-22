@@ -12,7 +12,7 @@ const CategoryTests = () => {
 
     useEffect(() => {
         axios
-            .get(`quizzes/category/${categoryName}`)
+            .get(`category/${categoryName}`)
             .then((res) => {
                 setQuizzes(res.data);
                 console.log("Quizzes nhận được:", res.data);

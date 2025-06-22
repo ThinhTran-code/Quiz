@@ -15,8 +15,15 @@ const Flashcard = () => {
 
     useEffect(() => {
         axios
-            .get(`quiz/${id}`)
-            .then((response) => setCards(response.data))
+            .get(`flashcard/${id}`)
+            .then((response) => {
+                console.log("✅ Loaded quiz:", response.data); // gợi ý log để debug
+                const formatted = response.data?.questions?.map((q) => ({
+                    question: q.question,
+                    answer: q.answers[q.answer]?.option || "Không rõ đáp án"
+                }));
+                setCards(formatted);
+            })
             .catch((error) => console.error("Lỗi khi tải flashcards:", error));
     }, [id]);
 
@@ -64,9 +71,8 @@ const Flashcard = () => {
                     <div
                         className="absolute bg-[#660000] h-2 rounded-full"
                         style={{
-                            width: `${
-                                ((currentIndex + 1) / cards.length) * 100
-                            }%`,
+                            width: `${((currentIndex + 1) / cards.length) * 100
+                                }%`,
                         }}
                     ></div>
                 </div>
@@ -82,7 +88,7 @@ const Flashcard = () => {
                             {flipped && cards.length > 0
                                 ? cards[currentIndex].answer
                                 : cards[currentIndex]?.question ||
-                                  "Chưa có dữ liệu"}
+                                "Chưa có dữ liệu"}
                         </p>
                     </div>
                 ) : (
@@ -107,11 +113,10 @@ const Flashcard = () => {
                 {/* 🔁 Nút Tự Động Lật */}
                 <button
                     onClick={() => setAutoFlip(!autoFlip)}
-                    className={`mt-6 px-6 py-2 rounded-lg font-semibold shadow-md ${
-                        autoFlip
-                            ? "bg-yellow-500 text-white"
-                            : "bg-gray-300 text-[#660000]"
-                    } hover:bg-gray-400`}
+                    className={`mt-6 px-6 py-2 rounded-lg font-semibold shadow-md ${autoFlip
+                        ? "bg-yellow-500 text-white"
+                        : "bg-gray-300 text-[#660000]"
+                        } hover:bg-gray-400`}
                 >
                     {autoFlip ? "Tự động lật: BẬT" : "Tự động lật: TẮT"}
                 </button>

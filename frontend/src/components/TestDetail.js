@@ -16,7 +16,7 @@ const TestDetail = () => {
 
     useEffect(() => {
         axios
-            .get(`quizzes/${quizId}`)
+            .get(`test/${quizId}`)
             .then((res) => {
                 setQuiz(res.data);
                 setLoading(false);
@@ -56,7 +56,7 @@ const TestDetail = () => {
 
             try {
                 const res = await axios.post(
-                    "http://localhost:9999/api/quizzes/submit",
+                    "submit",
                     submission
                 );
                 const result = res.data.quizAttempt;
@@ -132,8 +132,8 @@ const TestDetail = () => {
                                                 <label
                                                     key={i}
                                                     className={`flex items-center px-4 py-3 border rounded-lg cursor-pointer transition ${answers[q._id] === i
-                                                            ? "bg-blue-50 border-blue-500"
-                                                            : "bg-white hover:bg-gray-100"
+                                                        ? "bg-blue-50 border-blue-500"
+                                                        : "bg-white hover:bg-gray-100"
                                                         }`}
                                                 >
                                                     <input

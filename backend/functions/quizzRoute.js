@@ -108,14 +108,34 @@ app.http("getAllQuizzes", {
     },
 });
 
-app.http("getQuizById", {
+const { isValidObjectId } = require("mongoose");
+
+app.http("getFlashcardById", {
     methods: ["GET"],
     authLevel: "anonymous",
-    route: "quiz/{id}",
+    route: "flashcard/{id}",
     handler: async (req, context) => {
         try {
             await connectDB();
-            const quiz = await Quiz.findById(req.params.id);
+
+            const id = req.params?.id;
+            console.log("📦 Received ID:", id);
+
+            if (!id) {
+                return {
+                    status: 400,
+                    jsonBody: { message: "Thiếu ID trong URL" },
+                };
+            }
+
+            if (!isValidObjectId(id)) {
+                return {
+                    status: 400,
+                    jsonBody: { message: "ID không hợp lệ" },
+                };
+            }
+
+            const quiz = await Quiz.findById(id);
             if (!quiz || !quiz.isEnabled) {
                 return {
                     status: 404,
@@ -124,12 +144,58 @@ app.http("getQuizById", {
                     },
                 };
             }
+
             return { status: 200, jsonBody: quiz };
         } catch (err) {
+            console.error("❌ Lỗi hệ thống:", err.message);
             return { status: 500, jsonBody: { message: err.message } };
         }
     },
 });
+
+app.http("getQuizById", {
+    methods: ["GET"],
+    authLevel: "anonymous",
+    route: "test/{id}",
+    handler: async (req, context) => {
+        try {
+            await connectDB();
+
+            const id = req.params?.id;
+            console.log("📦 Received ID:", id);
+
+            if (!id) {
+                return {
+                    status: 400,
+                    jsonBody: { message: "Thiếu ID trong URL" },
+                };
+            }
+
+            if (!isValidObjectId(id)) {
+                return {
+                    status: 400,
+                    jsonBody: { message: "ID không hợp lệ" },
+                };
+            }
+
+            const quiz = await Quiz.findById(id);
+            if (!quiz || !quiz.isEnabled) {
+                return {
+                    status: 404,
+                    jsonBody: {
+                        message: "Quiz không tồn tại hoặc bị vô hiệu hóa",
+                    },
+                };
+            }
+
+            return { status: 200, jsonBody: quiz };
+        } catch (err) {
+            console.error("❌ Lỗi hệ thống:", err.message);
+            return { status: 500, jsonBody: { message: err.message } };
+        }
+    },
+});
+
 
 app.http("submitQuizWithDetails", {
     methods: ["POST"],

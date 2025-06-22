@@ -13,7 +13,7 @@ const CategoryFlashcards = () => {
 
     useEffect(() => {
         axios
-            .get(`quizzes/category/${categoryName}`)
+            .get(`category/${categoryName}`)
             .then((res) => setQuizzes(res.data))
             .catch((error) => console.error("Lỗi tải quiz:", error));
     }, [categoryName]);

@@ -1,20 +1,9 @@
 const { app } = require('@azure/functions');
-const multer = require('multer');
 const pdfParse = require('pdf-parse');
 const fs = require('fs/promises');
 const axios = require('axios');
 const Quiz = require('../shared/model/Quiz');
 const connectDB = require('../shared/mongoose');
-
-const upload = multer({ dest: '/tmp' });
-
-const parseFormData = (req, res) =>
-    new Promise((resolve, reject) => {
-        upload.single('file')(req, res, (err) => {
-            if (err) reject(err);
-            else resolve(req.file);
-        });
-    });
 
 app.http('uploadQuizFromPDF', {
     methods: ['POST'],
@@ -23,9 +12,20 @@ app.http('uploadQuizFromPDF', {
     handler: async (req, context) => {
         try {
             await connectDB();
-            const [reqRaw, resRaw] = [req, {}];
-            const file = await parseFormData(reqRaw, resRaw);
-            const filePath = file.path;
+
+            const formData = await req.formData();
+            const file = formData.get("file");
+            const category = formData.get("category") || "Khác";
+            const name = formData.get("name") || "Tài liệu không tiêu đề";
+            const instructions = formData.get("instructions") || "Chọn đáp án đúng nhất.";
+
+            if (!file || !file.arrayBuffer) {
+                throw new Error("Không tìm thấy file PDF hợp lệ trong formData.");
+            }
+
+            const buffer = Buffer.from(await file.arrayBuffer());
+            const filePath = `/tmp/${file.name}`;
+            await fs.writeFile(filePath, buffer);
 
             const fileBuffer = await fs.readFile(filePath);
             const pdfData = await pdfParse(fileBuffer);
@@ -109,15 +109,16 @@ ${textContent}
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
             const newQuiz = new Quiz({
                 name: `${quizTitle} - ${timestamp}`,
-                instructions: 'Trả lời các câu hỏi sau',
+                instructions,
                 isEnabled: true,
                 questions: parsedQuestions,
                 duration: { minutes: 10 },
-                category: req.query.get('category') || 'Khác',
+                category,
                 source: 'AI',
             });
 
             const savedQuiz = await newQuiz.save();
+
             await fs.unlink(filePath);
 
             return {
