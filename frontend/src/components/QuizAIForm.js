@@ -34,7 +34,7 @@ const QuizAIForm = () => {
 
         try {
             const res = await axios.post(
-                "http://localhost:9999/api/generate/upload",
+                "generate/upload",
                 formData,
                 {
                     headers: {
@@ -136,11 +136,10 @@ const QuizAIForm = () => {
                                             <div
                                                 key={i}
                                                 className={`p-3 rounded-lg text-lg font-medium 
-                                        ${
-                                            i === q.correctIndex
-                                                ? "bg-green-500 text-green font-bold"
-                                                : "bg-white text-gray-800 border border-gray-300"
-                                        }`}
+                                        ${i === q.correctIndex
+                                                        ? "bg-green-500 text-green font-bold"
+                                                        : "bg-white text-gray-800 border border-gray-300"
+                                                    }`}
                                             >
                                                 {String.fromCharCode(65 + i)}.{" "}
                                                 {opt}

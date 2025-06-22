@@ -29,7 +29,7 @@ const FolderCategories = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:9999/api/quizzes")
+            .get("quizzes")
             .then((res) => {
                 const uniqueCategories = [
                     ...new Set(res.data.map((quiz) => quiz.category)),

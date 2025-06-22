@@ -12,7 +12,7 @@ const CategoryTests = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:9999/api/quizzes/category/${categoryName}`)
+            .get(`quizzes/category/${categoryName}`)
             .then((res) => {
                 setQuizzes(res.data);
                 console.log("Quizzes nhận được:", res.data);
@@ -84,14 +84,14 @@ const CategoryTests = () => {
                                             </td>
                                             <td className="px-4 py-3 text-white">
                                                 {quiz.createdAt &&
-                                                !isNaN(
-                                                    Date.parse(quiz.createdAt)
-                                                )
+                                                    !isNaN(
+                                                        Date.parse(quiz.createdAt)
+                                                    )
                                                     ? new Date(
-                                                          quiz.createdAt
-                                                      ).toLocaleDateString(
-                                                          "vi-VN"
-                                                      )
+                                                        quiz.createdAt
+                                                    ).toLocaleDateString(
+                                                        "vi-VN"
+                                                    )
                                                     : "Chưa xác định"}
                                             </td>
 

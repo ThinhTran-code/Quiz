@@ -16,7 +16,7 @@ const TestDetail = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:9999/api/quizzes/${quizId}`)
+            .get(`quizzes/${quizId}`)
             .then((res) => {
                 setQuiz(res.data);
                 setLoading(false);
@@ -131,11 +131,10 @@ const TestDetail = () => {
                                             {q.answers.map((option, i) => (
                                                 <label
                                                     key={i}
-                                                    className={`flex items-center px-4 py-3 border rounded-lg cursor-pointer transition ${
-                                                        answers[q._id] === i
+                                                    className={`flex items-center px-4 py-3 border rounded-lg cursor-pointer transition ${answers[q._id] === i
                                                             ? "bg-blue-50 border-blue-500"
                                                             : "bg-white hover:bg-gray-100"
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <input
                                                         type="radio"

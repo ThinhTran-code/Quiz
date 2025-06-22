@@ -14,7 +14,7 @@ const FlashcardList = () => {
 
     useEffect(() => {
         axios
-            .get("http://localhost:9999/api/quizzes")
+            .get("quizzes")
             .then((response) => setQuizzes(response.data))
             .catch((error) =>
                 console.error("Lỗi khi tải danh sách quiz:", error)
@@ -101,22 +101,20 @@ const FlashcardList = () => {
                         <button
                             onClick={prevPage}
                             disabled={currentPage === 1}
-                            className={`px-6 py-2 rounded-lg font-semibold shadow-md ${
-                                currentPage === 1
-                                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                    : "bg-white text-[#660000] hover:bg-gray-300"
-                            }`}
+                            className={`px-6 py-2 rounded-lg font-semibold shadow-md ${currentPage === 1
+                                ? "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                : "bg-white text-[#660000] hover:bg-gray-300"
+                                }`}
                         >
                             Quay lại
                         </button>
                         <button
                             onClick={nextPage}
                             disabled={indexOfLastQuiz >= filteredQuizzes.length}
-                            className={`px-6 py-2 rounded-lg font-semibold shadow-md ${
-                                indexOfLastQuiz >= filteredQuizzes.length
-                                    ? "bg-gray-300 text-[#660000] cursor-not-allowed"
-                                    : "bg-white text-text-[#660000] hover:bg-gray-300"
-                            }`}
+                            className={`px-6 py-2 rounded-lg font-semibold shadow-md ${indexOfLastQuiz >= filteredQuizzes.length
+                                ? "bg-gray-300 text-[#660000] cursor-not-allowed"
+                                : "bg-white text-text-[#660000] hover:bg-gray-300"
+                                }`}
                         >
                             Tiếp theo
                         </button>

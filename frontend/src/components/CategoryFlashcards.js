@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Navbar from "./Navbar";
@@ -13,7 +13,7 @@ const CategoryFlashcards = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:9999/api/quizzes/category/${categoryName}`)
+            .get(`quizzes/category/${categoryName}`)
             .then((res) => setQuizzes(res.data))
             .catch((error) => console.error("Lỗi tải quiz:", error));
     }, [categoryName]);
@@ -96,14 +96,14 @@ const CategoryFlashcards = () => {
                                             </td>
                                             <td className="px-4 py-3 text-gray-700">
                                                 {quiz.createdAt &&
-                                                !isNaN(
-                                                    Date.parse(quiz.createdAt)
-                                                )
+                                                    !isNaN(
+                                                        Date.parse(quiz.createdAt)
+                                                    )
                                                     ? new Date(
-                                                          quiz.createdAt
-                                                      ).toLocaleDateString(
-                                                          "vi-VN"
-                                                      )
+                                                        quiz.createdAt
+                                                    ).toLocaleDateString(
+                                                        "vi-VN"
+                                                    )
                                                     : "Chưa xác định"}
                                             </td>
                                             <td className="px-4 py-3 flex flex-col gap-2 sm:flex-row">
