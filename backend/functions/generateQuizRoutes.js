@@ -1,6 +1,8 @@
 const { app } = require('@azure/functions');
 const pdfParse = require('pdf-parse');
 const fs = require('fs/promises');
+const path = require('path');
+const os = require('os');
 const axios = require('axios');
 const Quiz = require('../shared/model/Quiz');
 const connectDB = require('../shared/mongoose');
@@ -24,7 +26,11 @@ app.http('uploadQuizFromPDF', {
             }
 
             const buffer = Buffer.from(await file.arrayBuffer());
-            const filePath = `/tmp/${file.name}`;
+
+            const tmpDir = os.tmpdir();
+            await fs.mkdir(tmpDir, { recursive: true });
+            const filePath = path.join(tmpDir, file.name);
+
             await fs.writeFile(filePath, buffer);
 
             const fileBuffer = await fs.readFile(filePath);
@@ -119,6 +125,7 @@ ${textContent}
 
             const savedQuiz = await newQuiz.save();
 
+            // Xóa file tạm
             await fs.unlink(filePath);
 
             return {
