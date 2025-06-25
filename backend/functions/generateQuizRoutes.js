@@ -75,7 +75,8 @@ ${textContent}
             const response = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
-                    model: 'gpt-4o',
+                    // model: 'gpt-4o',
+                    model: 'gpt-3.5-turbo',
                     messages: [{ role: 'user', content: prompt }],
                     temperature: 0.7,
                     max_tokens: 2000,
@@ -137,7 +138,7 @@ ${textContent}
                 },
             };
         } catch (err) {
-            context.error(err.message);
+            context.error("❌ OpenAI Error:", err.response?.data || err.message);
             return {
                 status: 500,
                 jsonBody: {
