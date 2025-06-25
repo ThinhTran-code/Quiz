@@ -13,7 +13,10 @@ app.http('uploadQuizFromPDF', {
     route: 'upload',
     handler: async (req, context) => {
         try {
+            context.log("🚀 Bắt đầu xử lý request tạo quiz từ PDF");
+
             await connectDB();
+            context.log("✅ Kết nối MongoDB thành công");
 
             const formData = await req.formData();
             const file = formData.get("file");
@@ -32,6 +35,7 @@ app.http('uploadQuizFromPDF', {
             const filePath = path.join(tmpDir, file.name);
 
             await fs.writeFile(filePath, buffer);
+            context.log("📁 File PDF đã được ghi tạm tại:", filePath);
 
             const fileBuffer = await fs.readFile(filePath);
             const pdfData = await pdfParse(fileBuffer);
@@ -72,6 +76,10 @@ Dưới đây là nội dung tài liệu:
 ${textContent}
 `;
 
+            // Log preview key và prompt
+            context.log("🔑 OPENAI_API_KEY length:", process.env.OPENAI_API_KEY?.length);
+            context.log("🧠 Prompt preview:", prompt.slice(0, 200), "...");
+
             const response = await axios.post(
                 'https://api.openai.com/v1/chat/completions',
                 {
@@ -89,7 +97,8 @@ ${textContent}
                 }
             );
 
-            const aiContent = response.data.choices[0].message.content;
+            const aiContent = response.data.choices[0]?.message?.content || "";
+            context.log("🤖 AI response (preview):", aiContent.slice(0, 300));
 
             const rawQuestions = aiContent.split('\n\n').filter((q) => q.trim() !== '');
             const parsedQuestions = rawQuestions.map((block) => {
@@ -125,9 +134,9 @@ ${textContent}
             });
 
             const savedQuiz = await newQuiz.save();
-
-            // Xóa file tạm
             await fs.unlink(filePath);
+
+            context.log("✅ Quiz đã được lưu thành công:", savedQuiz._id.toString());
 
             return {
                 status: 200,
@@ -138,12 +147,16 @@ ${textContent}
                 },
             };
         } catch (err) {
-            context.error("❌ OpenAI Error:", err.response?.data || err.message);
+            context.log("❌ LỖI XẢY RA:");
+            context.log("🧵 Message:", err.message);
+            context.log("📜 Stack:", err.stack);
+            context.log("📨 Response:", err.response?.data || 'Không có response');
+
             return {
                 status: 500,
                 jsonBody: {
                     error: 'Không thể tạo quiz từ tài liệu.',
-                    message: err.message,
+                    message: err.response?.data?.error?.message || err.message,
                 },
             };
         }
