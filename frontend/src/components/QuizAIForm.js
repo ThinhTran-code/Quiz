@@ -61,7 +61,7 @@ const QuizAIForm = () => {
             setQuestions(parsedQuestions);
         } catch (err) {
             setError("Không thể sinh câu hỏi từ file PDF.");
-            console.error(err);
+            console.error(err.message);
         } finally {
             setLoading(false);
         }
